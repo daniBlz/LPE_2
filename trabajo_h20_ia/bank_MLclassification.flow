@@ -1,0 +1,65 @@
+{
+  "version": "1.0.0",
+  "cells": [
+    {
+      "type": "cs",
+      "input": "setupParse source_frames: [ \"bank-full.csv\"]"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  source_frames: [\"bank-full.csv\"]\n  destination_frame: \"bank\"\n  parse_type: \"CSV\"\n  separator: 59\n  number_columns: 17\n  single_quotes: false\n  column_names: [\"age\",\"job\",\"marital\",\"education\",\"default\",\"balance\",\"housing\",\"loan\",\"contact\",\"day\",\"month\",\"duration\",\"campaign\",\"pdays\",\"previous\",\"poutcome\",\"y\"]\n  column_types: [\"Numeric\",\"Enum\",\"Enum\",\"Enum\",\"Enum\",\"Numeric\",\"Enum\",\"Enum\",\"Enum\",\"Numeric\",\"Enum\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Enum\",\"Enum\"]\n  delete_on_done: true\n  check_header: 1\n  chunk_size: 4194304\n  escapechar: undefined"
+    },
+    {
+      "type": "cs",
+      "input": "getFrameSummary \"bank\""
+    },
+    {
+      "type": "cs",
+      "input": "getColumnSummary \"bank\", \"age\""
+    },
+    {
+      "type": "cs",
+      "input": "getColumnSummary \"bank\", \"job\""
+    },
+    {
+      "type": "cs",
+      "input": "getColumnSummary \"bank\", \"y\""
+    },
+    {
+      "type": "cs",
+      "input": "splitFrame"
+    },
+    {
+      "type": "cs",
+      "input": "splitFrame \"bank\", [0.75], [\"train\",\"test\"], 800704"
+    },
+    {
+      "type": "cs",
+      "input": "runAutoML"
+    },
+    {
+      "type": "cs",
+      "input": "runAutoML {\"input_spec\":{\"training_frame\":\"train\",\"response_column\":\"y\",\"validation_frame\":\"test\",\"ignored_columns\":[],\"sort_metric\":\"AUTO\"},\"build_control\":{\"distribution\":\"AUTO\",\"nfolds\":-1,\"balance_classes\":false,\"stopping_criteria\":{\"seed\":-1,\"max_models\":0,\"max_runtime_secs\":500,\"max_runtime_secs_per_model\":0,\"stopping_rounds\":3,\"stopping_metric\":\"AUTO\",\"stopping_tolerance\":-1},\"keep_cross_validation_predictions\":true,\"keep_cross_validation_models\":true,\"keep_cross_validation_fold_assignment\":false},\"build_models\":{\"exclude_algos\":[],\"exploitation_ratio\":-1,\"monotone_constraints\":[]}}, 'exec'"
+    },
+    {
+      "type": "cs",
+      "input": "getLeaderboard \"AutoML_1_20221111_102923@@y\""
+    },
+    {
+      "type": "cs",
+      "input": "getModel \"StackedEnsemble_AllModels_3_AutoML_1_20221111_102923\""
+    },
+    {
+      "type": "cs",
+      "input": "getModel \"GBM_3_AutoML_1_20221111_102923\""
+    },
+    {
+      "type": "cs",
+      "input": "predict model: \"StackedEnsemble_AllModels_3_AutoML_1_20221111_102923\""
+    },
+    {
+      "type": "cs",
+      "input": "predict model: \"StackedEnsemble_AllModels_3_AutoML_1_20221111_102923\", frame: \"test\", predictions_frame: \"prediction\""
+    }
+  ]
+}
