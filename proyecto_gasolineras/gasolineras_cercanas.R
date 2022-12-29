@@ -55,6 +55,12 @@ sum(is.na(df_gas))
 
 
 # conseguir latitud y longitud a partir de la calle 
+
+# coordenadas de prueba (longitud, latitud):
+## u1 <- c(-3.919257897378161, 40.373942679873714) # C. Tajo, s/n, 28670 Villaviciosa de Odón, Madrid # (uem) 
+## u2 <- c(-3.870636188707822, 40.33936849062731)# C. Gladiolo, s/n, 28933 Móstoles, Madrid # (hospital rey juan carlos) 
+## u3 <- c(-3.688033292588252, 40.45349588127293)# Av. de Concha Espina, 1, 28036 Madrid # (SANTIAGO BERNABEU)
+
 uem_address <- "C. Tajo, s/n, 28670 Villaviciosa de Odón, Madrid" #uem
 key <- "AIzaSyBwZmpm5vyvU7lKhHH7iCpXkVq3cy_C8Jc" # key del profesor
 
