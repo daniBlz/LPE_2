@@ -9,30 +9,22 @@ use_condaenv("base", required = TRUE)
 #Cargamos las funcione del archivo registro.py
 source_python("registro.py")
 #Ejecutamos la función
-registro <- function(user, pwd) {
-  registro(user, pwd)
-}
-
-login <- function(user, pwd) {
-  login(user, pwd)
-}
-
-introducirDatosUser <- function (email, name, coche, modelo, combustible, consumo) {
-  introducirDatosUser(email, name, coche, modelo, combustible, consumo)
-}
-
-getUserID <- function (email) {
-  getUserID(email)
-}
-
-leerDatosUser <- function (id) {
-  leerDatosUser(id)
-}
-
-anadirLocalizacion <- function (id, lat, lon) {
-  anadirLocalizacion(id, lat, lon)
-}
 
 
+#Q: por que esto no funcion
+#A: porque no se puede llamar a una funcion que no existe
+#Q: pero si que existe
+#A: porque no se ha cargado el archivo registro.py
 
+fb <- myInit()
 
+db <- getDB(fb)
+storage <- getStorage(fb)
+auth <- getAuth(fb)
+
+#Creamos un usuario
+registro("hola@gmail.com", "pruebanumero1")
+#Iniciamos sesión
+login("hola@gmail.com", "pruebanumero1")
+#Creamos un usuario
+introducirDatosUser("luis@gmail.com", "luis", "seat", "ibiza", "gasolina", 5.5)
