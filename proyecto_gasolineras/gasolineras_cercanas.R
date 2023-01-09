@@ -10,17 +10,7 @@
 
 # Libraries
 if(!require("pacman")) install.packages("pacman")
-pacman::p_load(pacman, magrittr, tidyverse, leaflet, osrm, janitor, geosphere, ggmap, mapsapi, reticulate)
-
-# Ignorar la siguiente descripcion a no sea q se utilize, q no es el caso
-#osrm: build and send an OSRM API query to get the travel geometry between two points.
-# src: starting point of the route
-# dst: destination of the route
-# overview:
-# = "full": return the detailed geometry
-# = "simplified: return a simplified geometry (less points on the route to run quicker)
-# = "FALSE": return only time and distance
-# EXAMPLE: route <- osrmRoute(src=coord_ubi, dst=coord_gas_station, overview = FALSE)
+pacman::p_load(pacman, magrittr, tidyverse, leaflet, janitor, geosphere, ggmap, mapsapi, reticulate, osrm)
 
 # Dataset gasolineras
 url_ <- ("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/")
@@ -36,9 +26,6 @@ colnames(df_source_gas)
 locale() # configuracion
 # limpiar los nombres de las columnas y cambiar el decimal por la coma 
 df_gas <- df_source_gas %>% janitor::clean_names() %>% type_convert(locale = locale(decimal_mark = ",")) %>% as_tibble()
-
-sum(is.na(df_gas))
-# ¿NAN VALUES?
 
 # DISTANCE CALCULATION ------------------------------------------------------
 
@@ -67,19 +54,22 @@ key <- "AIzaSyBwZmpm5vyvU7lKhHH7iCpXkVq3cy_C8Jc" # key del profesor
 ggmap::register_google(key=key)                                                                           
 coord <- data.frame(geocode(location=uem_address, output = "latlona", source = "google"))
 
-# Aniadimos la nueva localizacion con codigo dani:
-# anadirLocalizacion(coord[1,"address"], coord[1,"lat"], coord[1,"lon"])
+# ya tenemos el id y coordenadas de la localizacion, solo falta la lista con las gasolineras que corresponden al indice de df_gas
+
+
+# aniadimos una columna que sea el indice ya que correspondera al id
+df_gas <- tibble::rowid_to_column(data, "gasolineras")
 
 
 # Calculamos las gasolineras cercanas con el id de usuario, id ubicacion (calle), distancias entre gas y ubi,  lat y lon de gas., rotulo y precio gasoleo 
-df_ubi_gas <- df_gas %>% mutate(id_user="user1",
-                                calle_ubi= coord[1,"address"], 
+df_localizacion <- df_gas %>% mutate(
                                 distancias = round(distGeo(df_gas %>% select("longitud_wgs84", "latitud"), c(coord[1,"lon"], coord[1,"lat"]))/1000, 2)) %>% 
-                          filter(distancias < 10) %>% 
-                          select("rotulo", "calle_ubi", "distancias", "precio_gasoleo_a", "latitud", "longitud_wgs84")
-# ANIADIMOS TAMBIEN LAS COORD DE LA UBICACION?
+                              select("distancias", "gasolineras")
 
-# Aniadir las gasolineras cercanas a la tabla con funciones Dani.
+
+
+# Aniadimos la nueva localizacion con codigo dani:
+# anadirLocalizacion("user1", coord[1,"calle"], coord[1,"lat"], coord[1,"lon"], df_localizacion %>% select("distancias"), df_localizacion %>% select("gasolineras"))
 
 
 # Visualizacion de gasolineras cercanas
@@ -87,6 +77,10 @@ df_ubi_gas <- df_gas %>% mutate(id_user="user1",
 gas_station_icon <- makeIcon(iconUrl = "./icons/icon_gas_station.png", iconWidth = 30, iconHeight = 30)
 ubi_icon <- makeAwesomeIcon(icon = "home", markerColor = "red")
 
+df_ubi_gas <- df_gas %>% mutate(calle_ubi= coord[1,"address"], 
+                                distancias = round(distGeo(df_gas %>% select("longitud_wgs84", "latitud"), c(coord[1,"lon"], coord[1,"lat"]))/1000, 2)) %>% 
+                         filter(distancias < 10) %>% 
+                         select("rotulo", "calle_ubi", "distancias", "precio_gasoleo_a", "latitud", "longitud_wgs84")
 
 df_ubi_gas %>% 
               leaflet() %>%                       # iteractive map
