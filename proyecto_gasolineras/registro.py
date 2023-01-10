@@ -29,12 +29,13 @@ def leerDatosUser(id):
     datos = db.child("usuarios").child(id).get()
     print(datos.val())
 
-def anadirLocalizacion(id : str , calle: str, lat : float ,lon : float, gasolineras : list, distancias: list):
+def anadirLocalizacion(id : str , calle: str, nombre:str, lat : float ,lon : float, gasolineras : list, distancias: list):
     
-    data = {"calle": calle,"lat":lat,"lon":lon, 'userID': id}
+    data = {"calle": calle,"nombre": nombre, "lat":lat,"lon":lon, 'userID': id}
     #Añadimos cada gasolinera al diccionario
+    gas_dist = dict(zip(gasolineras, distancias))
     for i in range(len(gasolineras)):
-        data['gasolinera'+str(i)] = gasolineras[i]
+        data['gasolinera'+str(i)] = list(gas_dist.items())[i]
 
     #Subimos los datos 
     db.child("localizaciones").push(data)
