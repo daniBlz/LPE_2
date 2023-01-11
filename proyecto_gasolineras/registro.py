@@ -1,5 +1,15 @@
 import json
 import pyrebase as pyb
+token = {
+"apiKey": "AIzaSyBM_eg6WTAXTG2hw0CEduIWW4GTCEiRISI",
+"authDomain": "gasolinero-47f02.firebaseapp.com",
+"databaseURL": "https://gasolinero-47f02-default-rtdb.europe-west1.firebasedatabase.app",
+"projectId": "gasolinero-47f02",
+"storageBucket": "gasolinero-47f02.appspot.com",
+"messagingSenderId": "166067131970",
+"appId": "1:166067131970:web:dd5ab99fad4bbaf0ae7fdb",
+"measurementId": "G-VC6QZ0BTZW"
+}
 firebase = pyb.initialize_app(token)
 auth = firebase.auth()
 db = firebase.database()

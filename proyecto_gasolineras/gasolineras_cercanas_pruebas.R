@@ -49,7 +49,7 @@ df_gas <- df_source_gas %>% janitor::clean_names() %>% type_convert(locale = loc
 ## u3 <- c(-3.688033292588252, 40.45349588127293)# Av. de Concha Espina, 1, 28036 Madrid # (SANTIAGO BERNABEU)
 
 uem_address <- "C. Tajo, s/n, 28670 Villaviciosa de Odón, Madrid" #uem
-key <- "AIzaSyBwZmpm5vyvU7lKhHH7iCpXkVq3cy_C8Jc" # key del profesor
+key <- "AIzaSyB-dizNl2X5CoVs5p1owWve46mqoDhl2lY" # key del profesor
 
 ggmap::register_google(key=key)                                                                           
 coord <- data.frame(geocode(location=uem_address, output = "latlona", source = "google"))

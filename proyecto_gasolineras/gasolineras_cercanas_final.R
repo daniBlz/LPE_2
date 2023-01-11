@@ -6,12 +6,18 @@
 ## Trabajo grupal gasolineras
 
 
-# Libraries
+#Importamos librerias
 if(!require("pacman")) install.packages("pacman")
 pacman::p_load(pacman, magrittr, tidyverse, leaflet, janitor, geosphere, ggmap, mapsapi, reticulate, osrm)
 
+# Nos logeamos
+login("cristina@gmail.com", "cristina1101")
+userId <- getUserID("cristina@gmail.com")
 
-aniadir_ubi_r <- function(id_user, calle, nombre){
+# aniadimos ubicacion junto a sus gasolineras cercanas
+aniadir_ubi(userId, "C. Tajo, s/n, 28670 Villaviciosa de Odón, Madrid", "uni")
+
+aniadir_ubi <- function(userId, calle, idLoc){
   
   # cogemos las coordenadas de la calle que nos da el usuario
   coord <- get_coord_localizacion(calle)
@@ -20,7 +26,10 @@ aniadir_ubi_r <- function(id_user, calle, nombre){
   gasolineras <- get_calculo_gas(coord) # c(id, distancias)
   
   #aniadimos la localizacion a Firebase
-  anadirLocalizacion(id_user, calle, nombre, coord[1,"lat"], coord[1,"lon"], gasolineras[1], gasolineras[2])
+  anadirLocalizacion(userId, calle, idLoc, coord[1,"lat"], coord[1,"lon"])
+  for (i in 1:nrow(d)){
+    anadirGasolinera(userId, idLoc, gasolineras$idGasol[i], gasolineras$distancias[i])
+  }
 }
 
 
@@ -37,28 +46,26 @@ get_calculo_gas <- function(coord){
   #calculamos las distancias
   
   # aniadimos una columna que sea el indice ya que correspondera al id de la gasolinera
-  df_gas["gasolineras"] <- 1:nrow(df_gas)
+  df_gas["idGasol"] <- 1:nrow(df_gas)
   
   # Calculamos las gasolineras cercanas  
   df_localizacion <- df_gas %>% mutate(
     distancias = round(distGeo(df_gas %>% select("longitud_wgs84", "latitud"), c(coord[1,"lon"], coord[1,"lat"]))/1000, 2)) %>% 
-    select("distancias", "gasolineras")
+    filter(distancias < 10) %>% 
+    select("distancias", "idGasol")
   
   # devolvemos el vector con el id de las gasolineras y las distancias
-  return(c(df_localizacion %>% select("gasolineras"), df_localizacion %>% select("distancias")))
+  return(df_localizacion)
 }
 
 get_coord_localizacion <- function(calle) {
   
   # registramos la key del profesor en ggmap
-  key <- "AIzaSyBwZmpm5vyvU7lKhHH7iCpXkVq3cy_C8Jc" # key del profesor
+  key <- "AIzaSyB-dizNl2X5CoVs5p1owWve46mqoDhl2lY" # key del profesor
   ggmap::register_google(key=key)     
   
   # Obtenemos la localizacion con ggmap
-  coord <- data.frame(geocode(location=uem_address, output = "latlona", source = "google"))
+  coord <- data.frame(geocode(location=calle, output = "latlona", source = "google"))
   return(coord)
 }
-
-
-
 
