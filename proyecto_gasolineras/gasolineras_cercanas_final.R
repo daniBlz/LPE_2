@@ -17,6 +17,9 @@ userId <- getUserID("cristina@gmail.com")
 # aniadimos ubicacion junto a sus gasolineras cercanas
 aniadir_ubi(userId, "C. Tajo, s/n, 28670 Villaviciosa de Odón, Madrid", "uni")
 
+
+# FUNCIONES ---------------------------------------------------------------
+
 aniadir_ubi <- function(userId, calle, idLoc){
   
   # cogemos las coordenadas de la calle que nos da el usuario
@@ -27,7 +30,7 @@ aniadir_ubi <- function(userId, calle, idLoc){
   
   #aniadimos la localizacion a Firebase
   anadirLocalizacion(userId, calle, idLoc, coord[1,"lat"], coord[1,"lon"])
-  for (i in 1:nrow(d)){
+  for (i in 1:nrow(gasolineras)){
     anadirGasolinera(userId, idLoc, gasolineras$idGasol[i], gasolineras$distancias[i])
   }
 }

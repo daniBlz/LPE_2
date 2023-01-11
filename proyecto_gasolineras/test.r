@@ -10,6 +10,3 @@ use_condaenv("base", required = TRUE)
 source_python("registro.py")
 #Ejecutamos la función
 
-vect <- c('fasd',ásdasdas)
-
-#Hacemos un bulce for que recorra vect

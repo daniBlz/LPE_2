@@ -66,3 +66,7 @@ def getStorage(firebase):
     storage = firebase.storage()
     return storage
 
+def GetGasolLoc(idUser,idLoc):
+    gasolineras = db.child(f"users/{idUser}/localizaciones/{idLoc}/gasolineras").get()
+    return gasolineras.val()
+
