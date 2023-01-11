@@ -64,7 +64,7 @@ get_calculo_gas <- function(coord){
 get_coord_localizacion <- function(calle) {
   
   # registramos la key del profesor en ggmap
-  key <- "AIzaSyB-dizNl2X5CoVs5p1owWve46mqoDhl2lY" # key del profesor
+  key <- "apikey" # key del profesor
   ggmap::register_google(key=key)     
   
   # Obtenemos la localizacion con ggmap
