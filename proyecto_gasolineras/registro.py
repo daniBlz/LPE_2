@@ -28,17 +28,17 @@ def leerDatosUser(id):
     #Leemos los datos del usuario con el id
     datos = db.child("usuarios").child(id).get()
     print(datos.val())
-
+    
 def anadirLocalizacion(id : str , calle: str, nombre:str, lat : float ,lon : float, gasolineras : list, distancias: list):
     
-    data = {"calle": calle,"nombre": nombre, "lat":lat,"lon":lon, 'userID': id}
+    data = {"calle": calle,"nombre": nombre, "lat":lat,"lon":lon}
     #Añadimos cada gasolinera al diccionario
     gas_dist = dict(zip(gasolineras, distancias))
     for i in range(len(gasolineras)):
         data['gasolinera'+str(i)] = list(gas_dist.items())[i]
 
-    #Subimos los datos 
-    db.child("localizaciones").push(data)
+    #Añadimos la localizacion al usuario
+    db.child(f"users/{id}/localizaciones").push(data)
     
 def myInit():
     with open('token.json') as f:
