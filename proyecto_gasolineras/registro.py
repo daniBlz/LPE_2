@@ -28,7 +28,7 @@ def leerDatosUser(id):
     #Leemos los datos del usuario con el id
     datos = db.child("usuarios").child(id).get()
     print(datos.val())
-    
+
 def anadirLocalizacion(id : str , calle: str, nombre:str, lat : float ,lon : float, gasolineras : list, distancias: list):
     
     data = {"calle": calle,"nombre": nombre, "lat":lat,"lon":lon}
@@ -37,8 +37,11 @@ def anadirLocalizacion(id : str , calle: str, nombre:str, lat : float ,lon : flo
     for i in range(len(gasolineras)):
         data['gasolinera'+str(i)] = list(gas_dist.items())[i]
 
-    #Añadimos la localizacion al usuario
-    db.child(f"users/{id}/localizaciones").push(data)
+    #Añadimos la localizacion con clave igual a nombre al usuario
+    db.child(f"users/{id}/localizaciones").child(nombre).set(data)
+def getLoc(userID,locID):
+    loc = db.child(f"users/{userID}/localizaciones").child(locID).get()
+    return loc.val()
     
 def myInit():
     with open('token.json') as f:
